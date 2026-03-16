@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あぶくまジュニアカヌークラブ 加入申込</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0c2340;
+    --blue: #1357a6;
+    --sky: #2196f3;
+    --water: #64b5f6;
+    --foam: #e8f4fd;
+    --accent: #e65100;
+    --white: #ffffff;
+    --gray: #546e7a;
+    --light: #f4f8fc;
+    --border: #cfd8dc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #0c2340;
+    min-height: 100vh;
+  }
+  .bg {
+    position: fixed; inset: 0;
+    background: linear-gradient(160deg, #0c2340 0%, #0d3060 60%, #0a1f38 100%);
+    z-index: 0; overflow: hidden;
+  }
+  .bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse at 15% 85%, rgba(33,150,243,.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(100,181,246,.12) 0%, transparent 45%);
+  }
+  .waves { position: absolute; bottom: 0; left: 0; right: 0; height: 160px; opacity: .08; }
+  .container { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 44px; animation: fadeDown .7s ease both; }
+  .org-name { font-size: 12px; color: rgba(255,255,255,.5); letter-spacing: .12em; margin-bottom: 10px; }
+  .club-logo { display:none; }
+  .header h1 { font-size: clamp(20px, 5vw, 30px); font-weight: 900; color: #fff; line-height: 1.4; margin-bottom: 6px; }
+  .header h1 em { font-style: normal; color: var(--water); }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,.4); letter-spacing: .06em; }
+  @keyframes float { 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-7px) rotate(3deg); } }
+  @keyframes fadeDown { from{ opacity:0; transform:translateY(-18px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,.97);
+    border-radius: 18px; padding: 36px 36px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(100,181,246,.12);
+    animation: fadeUp .65s ease both;
+  }
+  .card:nth-child(1){ animation-delay:.05s; }
+  .card:nth-child(2){ animation-delay:.12s; }
+  .card:nth-child(3){ animation-delay:.19s; }
+  .card:nth-child(4){ animation-delay:.26s; }
+  .card:nth-child(5){ animation-delay:.33s; }
+  @media(max-width:520px){ .card{ padding:24px 18px 22px; } }
+
+  .card-header { display: flex; align-items: center; gap: 11px; margin-bottom: 26px; padding-bottom: 14px; border-bottom: 2px solid var(--foam); }
+  .step-num { width:30px; height:30px; background:var(--navy); color:#fff; border-radius:50%; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .card-header h2 { font-size:15px; font-weight:700; color:var(--navy); flex:1; }
+  .req-badge { font-size:10px; font-weight:700; background:var(--accent); color:#fff; padding:3px 8px; border-radius:5px; letter-spacing:.04em; flex-shrink:0; }
+
+  /* Fields */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .form-grid.cols-1 { grid-template-columns:1fr; }
+  .form-grid.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:520px){ .form-grid, .form-grid.cols-3 { grid-template-columns:1fr; } }
+  .field { display:flex; flex-direction:column; }
+  label { font-size:11.5px; font-weight:700; color:#37474f; margin-bottom:6px; letter-spacing:.03em; }
+  input[type=text], input[type=email], input[type=tel], input[type=number], select, textarea {
+    font-family:'Noto Sans JP',sans-serif; font-size:14px; color:var(--navy);
+    background:var(--light); border:2px solid var(--border); border-radius:9px;
+    padding:11px 13px; transition:border .2s,box-shadow .2s,background .2s; outline:none; width:100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color:var(--sky); background:#fff; box-shadow:0 0 0 4px rgba(33,150,243,.11); }
+  input.error, select.error { border-color:#e53935; background:#fff5f5; }
+  input::placeholder, textarea::placeholder { color:#b0bec5; font-size:12.5px; }
+  select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%23546e7a' d='M5 7 0 0h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 13px center; padding-right:34px; cursor:pointer; }
+  textarea { resize:vertical; min-height:76px; }
+  .hint { font-size:11px; color:#90a4ae; margin-top:4px; }
+  .err-msg { font-size:11px; color:#e53935; margin-top:4px; display:none; }
+  .err-msg.show { display:block; }
+
+  /* Course cards */
+  .course-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+  @media(max-width:520px){ .course-grid{ grid-template-columns:1fr; } }
+  .course-option { position:relative; }
+  .course-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+  .course-label { display:block; border:2px solid var(--border); border-radius:13px; padding:15px 14px; cursor:pointer; transition:all .2s; background:var(--light); height:100%; }
+  .course-label:hover { border-color:var(--sky); background:#eef6fe; }
+  .course-option input:checked + .course-label { border-color:var(--blue); background:#e3eefc; box-shadow:0 0 0 3px rgba(19,87,166,.13); }
+  .course-top { display:flex; align-items:flex-start; gap:8px; margin-bottom:8px; }
+  .radio-circle { width:16px; height:16px; border:2px solid var(--border); border-radius:50%; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .course-option input:checked + .course-label .radio-circle { border-color:var(--blue); background:var(--blue); }
+  .course-option input:checked + .course-label .radio-circle::after { content:''; width:5px; height:5px; background:#fff; border-radius:50%; display:block; }
+  .course-title { font-size:12.5px; font-weight:700; color:var(--navy); line-height:1.4; }
+  .course-info { font-size:11px; color:var(--gray); line-height:1.8; padding-left:24px; }
+  .course-fee-tag { display:inline-block; margin-top:7px; margin-left:24px; background:var(--navy); color:var(--water); font-size:11px; font-weight:700; padding:3px 10px; border-radius:5px; }
+
+  /* Reg type */
+  .reg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:520px){ .reg-grid{ grid-template-columns:1fr; } }
+  .reg-option { position:relative; }
+  .reg-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+  .reg-label-box { display:block; border:2px solid var(--border); border-radius:11px; padding:13px 14px; cursor:pointer; transition:all .2s; background:var(--light); }
+  .reg-label-box:hover { border-color:var(--sky); background:#eef6fe; }
+  .reg-option input:checked + .reg-label-box { border-color:var(--blue); background:#e3eefc; box-shadow:0 0 0 3px rgba(19,87,166,.13); }
+  .reg-name { font-size:12.5px; font-weight:700; color:var(--navy); margin-bottom:2px; }
+  .reg-detail { font-size:11px; color:var(--gray); line-height:1.7; }
+
+  /* Notice */
+  .notice { background:var(--foam); border-left:4px solid var(--sky); border-radius:0 10px 10px 0; padding:13px 16px; font-size:12px; color:#37474f; line-height:1.85; margin-top:18px; }
+  .notice strong { color:var(--blue); }
+
+  /* Bank info */
+  .bank-box { background:#f8fbff; border:2px solid #d0e4f7; border-radius:12px; padding:18px 20px; margin-top:20px; font-size:12.5px; line-height:2; color:#37474f; }
+  .bank-title { font-size:12px; font-weight:700; color:var(--blue); margin-bottom:8px; letter-spacing:.04em; }
+
+  /* Submit */
+  .submit-wrap { text-align:center; margin-top:12px; animation:fadeUp .65s .4s ease both; }
+  .submit-btn { font-family:'Noto Sans JP',sans-serif; font-size:16px; font-weight:700; color:#fff; background:linear-gradient(135deg,#1357a6 0%,#2196f3 100%); border:none; border-radius:50px; padding:17px 64px; cursor:pointer; box-shadow:0 8px 28px rgba(19,87,166,.45); transition:transform .2s,box-shadow .2s; letter-spacing:.06em; position:relative; overflow:hidden; }
+  .submit-btn:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(19,87,166,.55); }
+  .submit-btn:active { transform:translateY(0); }
+  .submit-btn::after { content:''; position:absolute; top:0; left:-100%; right:0; bottom:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent); transition:left .45s; }
+  .submit-btn:hover::after { left:100%; }
+  .submit-note { margin-top:14px; font-size:11.5px; color:rgba(255,255,255,.42); line-height:1.9; }
+  .submit-note a { color:var(--water); text-decoration:none; }
+
+  /* Success */
+  #successMsg { display:none; text-align:center; padding:20px; animation:fadeUp .5s ease; }
+  #successMsg.show { display:block; }
+  .success-icon { font-size:64px; margin-bottom:16px; }
+  #successMsg h2 { font-size:22px; font-weight:900; color:#fff; margin-bottom:10px; }
+  #successMsg p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.9; }
+  #successMsg a { color:var(--water); }
+
+  .footer-info { text-align:center; color:rgba(255,255,255,.35); font-size:11.5px; margin-top:36px; line-height:2; }
+  .footer-info a { color:var(--water); text-decoration:none; }
+
+  /* Sibling addition */
+  .add-sibling-btn {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--blue);
+    background: var(--foam);
+    border: 2px dashed var(--sky);
+    border-radius: 10px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: all .2s;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .add-sibling-btn:hover { background: #d6eaf8; border-color: var(--blue); }
+
+  .sibling-block {
+    border: 2px solid #d0e4f7;
+    border-radius: 14px;
+    padding: 20px 20px 16px;
+    margin-bottom: 16px;
+    background: #f8fbff;
+    position: relative;
+    animation: fadeUp .3s ease;
+  }
+  .sibling-block-title {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .remove-sibling-btn {
+    font-size: 11px; font-weight: 700; color: #e53935;
+    background: #ffebee; border: 1px solid #ef9a9a;
+    border-radius: 6px; padding: 3px 10px; cursor: pointer;
+    transition: all .2s;
+  }
+  .remove-sibling-btn:hover { background: #ffcdd2; }
+
+  .sibling-course-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:520px){ .sibling-course-grid{ grid-template-columns:1fr; } }
+  .sibling-course-option { position: relative; }
+  .sibling-course-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+  .sibling-course-label {
+    display: block; border: 2px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; cursor: pointer; transition: all .2s; background: white; font-size: 12px;
+  }
+  .sibling-course-label:hover { border-color: var(--sky); background: #eef6fe; }
+  .sibling-course-option input:checked + .sibling-course-label {
+    border-color: var(--blue); background: #e3eefc;
+    box-shadow: 0 0 0 2px rgba(19,87,166,.13);
+  }
+  .sibling-course-name { font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+  .sibling-course-fee { font-size: 11px; color: var(--gray); }
+
+  .sibling-reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  @media(max-width:520px){ .sibling-reg-grid{ grid-template-columns:1fr; } }
+  .sibling-reg-option { position: relative; }
+  .sibling-reg-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+  .sibling-reg-label {
+    display: block; border: 2px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; cursor: pointer; transition: all .2s; background: white; font-size: 12px;
+  }
+  .sibling-reg-label:hover { border-color: var(--sky); background: #eef6fe; }
+  .sibling-reg-option input:checked + .sibling-reg-label {
+    border-color: var(--accent); background: #fff3e0;
+    box-shadow: 0 0 0 2px rgba(230,81,0,.1);
+  }
+  .sibling-reg-name { font-weight: 700; color: var(--navy); margin-bottom: 1px; }
+  .sibling-reg-fee { font-size: 11px; color: var(--gray); }
+  .sibling-section-label { font-size: 11.5px; font-weight: 700; color: #37474f; margin-bottom: 8px; display: block; }
+
+
+  /* 合計金額ボックス */
+  .total-box {
+    display: none;
+    background: linear-gradient(135deg, #0c2340 0%, #1357a6 100%);
+    border-radius: 14px;
+    padding: 22px 28px;
+    margin-bottom: 20px;
+    animation: fadeUp .4s ease;
+    box-shadow: 0 8px 28px rgba(19,87,166,.35);
+  }
+  .total-box.show { display: block; }
+  .total-box-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,.6);
+    letter-spacing: .08em;
+    margin-bottom: 14px;
+  }
+  .total-rows { margin-bottom: 14px; }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: rgba(255,255,255,.75);
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  .total-row:last-child { border-bottom: none; }
+  .total-divider {
+    height: 1px;
+    background: rgba(255,255,255,.25);
+    margin: 10px 0;
+  }
+  .total-amount-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .total-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .total-amount {
+    font-size: 26px;
+    font-weight: 700;
+    color: #64b5f6;
+    letter-spacing: .02em;
+  }
+  .total-note {
+    font-size: 11px;
+    color: rgba(255,255,255,.45);
+    margin-top: 8px;
+    line-height: 1.7;
+  }
+
+</style>
+</head>
+<body>
+<div class="bg">
+  <svg class="waves" viewBox="0 0 1440 160" preserveAspectRatio="none">
+    <path fill="white" d="M0,80 C360,140 720,20 1080,80 C1260,110 1380,60 1440,80 L1440,160 L0,160Z"/>
+    <path fill="white" opacity=".5" d="M0,110 C300,60 600,150 900,100 C1100,65 1300,130 1440,100 L1440,160 L0,160Z"/>
+  </svg>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="org-name">令和８年度　福島県カヌー協会</div>
+
+    <h1>あぶくまジュニア<em>カヌークラブ</em><br>加入申込</h1>
+    <div class="header-sub">Abukuma Junior Canoe Club — Membership Application</div>
+  </div>
+
+  <form id="joinForm" novalidate>
+
+    <!-- 1. お子様の情報 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">1</div>
+        <h2>お子様の情報</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>お子様のお名前（漢字）</label>
+          <input type="text" id="childName" placeholder="例：福島 太郎" required>
+          <span class="err-msg" id="childNameErr">お名前を入力してください</span>
+        </div>
+        <div class="field">
+          <label>お名前（ふりがな）</label>
+          <input type="text" id="childNameKana" placeholder="例：ふくしま たろう" required>
+          <span class="err-msg" id="childNameKanaErr">ふりがなを入力してください</span>
+        </div>
+      </div>
+      <div class="form-grid cols-3">
+        <div class="field">
+          <label>学校名</label>
+          <input type="text" id="school" placeholder="例：東和小学校">
+        </div>
+        <div class="field">
+          <label>学年</label>
+          <select id="grade" required>
+            <option value="">選択してください</option>
+            <optgroup label="小学生">
+              <option>小学１年生</option><option>小学２年生</option><option>小学３年生</option>
+              <option>小学４年生</option><option>小学５年生</option><option>小学６年生</option>
+            </optgroup>
+            <optgroup label="中学生">
+              <option>中学１年生</option><option>中学２年生</option><option>中学３年生</option>
+            </optgroup>
+          </select>
+          <span class="err-msg" id="gradeErr">学年を選択してください</span>
+        </div>
+        <div class="field">
+          <label>性別</label>
+          <select id="gender">
+            <option value="">選択してください</option>
+            <option>男子</option><option>女子</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>カヌー経験</label>
+          <select id="experience">
+            <option value="">選択してください</option>
+            <option>まったくない</option><option>少しある（体験程度）</option>
+            <option>1年未満</option><option>1年以上</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 希望コース -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">2</div>
+        <h2>希望コースを選択</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="course-grid">
+        <div class="course-option">
+          <input type="radio" name="course" id="c1" value="小学生6回体験コース">
+          <label class="course-label" for="c1">
+            <div class="course-top"><div class="radio-circle"></div><div class="course-title">小学生<br>6回体験コース</div></div>
+            <div class="course-info">令和８年５月（4回）・８月（2回）<br>毎週土曜日<br>9:00〜11:30　全6回</div>
+            <div class="course-fee-tag">年 3,000円</div>
+          </label>
+        </div>
+        <div class="course-option">
+          <input type="radio" name="course" id="c2" value="小学生レジャーコース">
+          <label class="course-label" for="c2">
+            <div class="course-top"><div class="radio-circle"></div><div class="course-title">小学生<br>レジャーコース</div></div>
+            <div class="course-info">令和８年５月〜９月末<br>毎週土曜日<br>9:00〜11:30　全15回</div>
+            <div class="course-fee-tag">年 6,000円</div>
+          </label>
+        </div>
+        <div class="course-option">
+          <input type="radio" name="course" id="c3" value="小学生選手強化コース">
+          <label class="course-label" for="c3">
+            <div class="course-top"><div class="radio-circle"></div><div class="course-title">小学生<br>選手強化コース</div></div>
+            <div class="course-info">４月下旬〜７月：土日<br>　　７月下旬〜９月末：土曜のみ<br>9:00〜11:30　全30回</div>
+            <div class="course-fee-tag">年 9,000円</div>
+          </label>
+        </div>
+        <div class="course-option">
+          <input type="radio" name="course" id="c4" value="中学生選手強化コース">
+          <label class="course-label" for="c4">
+            <div class="course-top"><div class="radio-circle"></div><div class="course-title">中学生<br>選手強化コース</div></div>
+            <div class="course-info">４月〜８月：土日<br>　　９月〜翌３月：土曜のみ<br>9:00〜12:00　全59回</div>
+            <div class="course-fee-tag">月 1,000円（年 12,000円）</div>
+          </label>
+        </div>
+      </div>
+      <span class="err-msg" id="courseErr" style="margin-top:10px;">コースを選択してください</span>
+      <div class="notice">
+        ＊施設使用料・艇・ライフジャケット・パドルの借用料金<strong>込み</strong>です。<br>
+        ＊各種大会参加等については別に案内します。<br>
+        ＊荒天で実施できなかった場合でも返金はいたしません。　＊毎回参加できなくても構いません。
+      </div>
+    </div>
+
+    <!-- 3. 登録区分 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">3</div>
+        <h2>登録・保険区分</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="reg-grid">
+        <div class="reg-option">
+          <input type="radio" name="regType" id="r1" value="小学生：会員（年2,800円）">
+          <label class="reg-label-box" for="r1">
+            <div class="reg-name">小学生：会員</div>
+            <div class="reg-detail">協会 2,000円 ＋ 保険 800円<br><strong>年 2,800円</strong></div>
+          </label>
+        </div>
+        <div class="reg-option">
+          <input type="radio" name="regType" id="r2" value="小学生：賛助会員B（年3,800円）">
+          <label class="reg-label-box" for="r2">
+            <div class="reg-name">小学生：賛助会員B</div>
+            <div class="reg-detail">連盟 1,000円 ＋ 協会 2,000円 ＋ 保険 800円<br><strong>年 3,800円</strong>　※全国少年少女大会参加者</div>
+          </label>
+        </div>
+        <div class="reg-option">
+          <input type="radio" name="regType" id="r3" value="中学生：賛助会員B（年4,300円）">
+          <label class="reg-label-box" for="r3">
+            <div class="reg-name">中学生：賛助会員B</div>
+            <div class="reg-detail">連盟 1,500円 ＋ 協会 2,000円 ＋ 保険 800円<br><strong>年 4,300円</strong></div>
+          </label>
+        </div>
+        <div class="reg-option">
+          <input type="radio" name="regType" id="r4" value="中学生：賛助会員A（年7,300円）">
+          <label class="reg-label-box" for="r4">
+            <div class="reg-name">中学生：賛助会員A</div>
+            <div class="reg-detail">連盟 4,500円 ＋ 協会 2,000円 ＋ 保険 800円<br><strong>年 7,300円</strong>　※全国中学生大会参加者</div>
+          </label>
+        </div>
+      </div>
+      <span class="err-msg" id="regErr" style="margin-top:10px;">登録区分を選択してください</span>
+      <div class="notice">
+        ＊小学生で全国少年少女大会に参加希望の方は<strong>「賛助会員B」</strong>、その他の方は<strong>「会員」</strong>となります。<br>
+        ＊中学生で全国中学生大会参加予定の方は<strong>「賛助会員A」</strong>、その他の方は<strong>「賛助会員B」</strong>となります。
+      </div>
+    </div>
+
+    <!-- 4. 保護者情報 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">4</div>
+        <h2>保護者・連絡先</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>保護者氏名</label>
+          <input type="text" id="parentName" placeholder="例：福島 花子" required>
+          <span class="err-msg" id="parentNameErr">保護者氏名を入力してください</span>
+        </div>
+        <div class="field">
+          <label>お子様との続柄</label>
+          <select id="relation">
+            <option value="">選択してください</option>
+            <option>父</option><option>母</option><option>祖父</option><option>祖母</option><option>その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid cols-1">
+        <div class="field">
+          <label>住所</label>
+          <input type="text" id="address" placeholder="例：福島県二本松市○○町○－○">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>電話番号（携帯）</label>
+          <input type="tel" id="phone" placeholder="例：090-0000-0000" required>
+          <span class="err-msg" id="phoneErr">電話番号を入力してください</span>
+        </div>
+        <div class="field">
+          <label>メールアドレス</label>
+          <input type="email" id="email" placeholder="例：example@mail.com" required>
+          <span class="err-msg" id="emailErr">メールアドレスを入力してください</span>
+        </div>
+      </div>
+      <div class="form-grid cols-1">
+        <div class="field">
+          <label>緊急連絡先（別番号があれば）</label>
+          <input type="tel" id="emergencyPhone" placeholder="例：0243-00-0000">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 兄弟の同時加入 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">5</div>
+        <h2>兄弟の同時加入</h2>
+      </div>
+
+      <div id="siblingList"></div>
+
+      <button type="button" class="add-sibling-btn" onclick="addSibling()">＋ お子様を追加する</button>
+      <div class="hint" style="margin-top:8px;">兄弟合わせての振込も可能です。お子様のお名前でお振込みください。</div>
+
+      <div class="form-grid cols-1" style="margin-top:22px;">
+        <div class="field">
+          <label>ご質問・配慮が必要な事項など</label>
+          <textarea id="remarks" placeholder="自由にご記入ください"></textarea>
+        </div>
+      </div>
+
+      <div class="bank-box">
+        <div class="bank-title">受講料・協会登録・保険料の納入先</div>
+        振込口座：ふくしま未来農協・東和支店　口座種別：普通　口座番号：0002513<br>
+        口座名義：フクシマケンカヌーキョウカイ　カイチョウ　ユサヒサオ<br>
+        ＊ご依頼人の前に「AJ」を必ず入れて、お子さまのお名前でお振込みください。ご兄弟まとめてのお振込みも可能です。
+      </div>
+    </div>
+
+    <!-- 合計金額 -->
+    <div class="total-box" id="totalBox">
+      <div class="total-box-title">お振込み金額の内訳</div>
+      <div class="total-rows" id="totalRows"></div>
+      <div class="total-divider"></div>
+      <div class="total-amount-row">
+        <div class="total-label">合計振込金額</div>
+        <div class="total-amount" id="totalAmount"></div>
+      </div>
+      <div class="total-note" id="totalNote"></div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button type="button" class="submit-btn" onclick="handleSubmit()">申込を送信する</button>
+      <div class="submit-note">
+        お問い合わせ：福島県カヌー協会<br>
+        <a href="/cdn-cgi/l/email-protection#e385968896908b8a8e82cd80828d8c86d1d3d2d4a3848e828a8fcd808c8e"><span class="__cf_email__" data-cfemail="7711021c02041f1e1a165914161918124547464037101a161e1b5914181a">[email&#160;protected]</span></a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Success -->
+  <div id="successMsg">
+    <div class="success-icon" style="font-size:48px;color:#1357a6;">✓</div>
+    <h2>申込を受け付けました！</h2>
+    <p>
+      お申込みいただきありがとうございます。<br>
+      <span id="successEmail" style="color:#64b5f6;font-weight:700;"></span> に確認メールをお送りしました。<br><br>
+      内容を確認の上、担当者よりご連絡差し上げます。<br><br>
+      受講料等は下記口座にお振込みください。<br>
+      ふくしま未来農協 東和支店　普通　0002513<br><br>
+      お問い合わせ：<a href="/cdn-cgi/l/email-protection#98feedf3edebf0f1f5f9b6fbf9f6f7fdaaa8a9afd8fff5f9f1f4b6fbf7f5"><span class="__cf_email__" data-cfemail="1a7c6f716f697273777b34797b74757f282a2b2d5a7d777b737634797577">[email&#160;protected]</span></a>
+    </p>
+  </div>
+
+  <div class="footer-info">
+    福島県カヌー協会　あぶくまジュニアカヌークラブ<br>
+    <a href="/cdn-cgi/l/email-protection#2345564856504b4a4e420d40424d4c461113121463444e424a4f0d404c4e"><span class="__cf_email__" data-cfemail="9bfdeef0eee8f3f2f6fab5f8faf5f4fea9abaaacdbfcf6faf2f7b5f8f4f6">[email&#160;protected]</span></a>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
+let siblingCount = 0;
+
+const COURSES = [
+  { id:'c1', val:'小学生6回体験コース', fee:'年 3,000円' },
+  { id:'c2', val:'小学生レジャーコース', fee:'年 6,000円' },
+  { id:'c3', val:'小学生選手強化コース', fee:'年 9,000円' },
+  { id:'c4', val:'中学生選手強化コース', fee:'月 1,000円（年 12,000円）' },
+];
+
+const REG_TYPES = [
+  { id:'r1', val:'小学生：会員', fee:'年 2,800円' },
+  { id:'r2', val:'小学生：賛助会員B', fee:'年 3,800円　※全国少年少女大会参加者' },
+  { id:'r3', val:'中学生：賛助会員B', fee:'年 4,300円' },
+  { id:'r4', val:'中学生：賛助会員A', fee:'年 7,300円　※全国中学生大会参加者' },
+];
+
+function addSibling() {
+  siblingCount++;
+  const n = siblingCount;
+  const list = document.getElementById('siblingList');
+
+  const courseOptions = COURSES.map(c => `
+    <div class="sibling-course-option">
+      <input type="radio" name="sib_course_${n}" id="sib_c${c.id}_${n}" value="${c.val}">
+      <label class="sibling-course-label" for="sib_c${c.id}_${n}">
+        <div class="sibling-course-name">${c.val}</div>
+        <div class="sibling-course-fee">${c.fee}</div>
+      </label>
+    </div>`).join('');
+
+  const regOptions = REG_TYPES.map(r => `
+    <div class="sibling-reg-option">
+      <input type="radio" name="sib_reg_${n}" id="sib_r${r.id}_${n}" value="${r.val}">
+      <label class="sibling-reg-label" for="sib_r${r.id}_${n}">
+        <div class="sibling-reg-name">${r.val}</div>
+        <div class="sibling-reg-fee">${r.fee}</div>
+      </label>
+    </div>`).join('');
+
+  const block = document.createElement('div');
+  block.className = 'sibling-block';
+  block.id = `sibling_${n}`;
+  block.innerHTML = `
+    <div class="sibling-block-title">
+      <span>お子様 ${n}人目</span>
+      <button type="button" class="remove-sibling-btn" onclick="removeSibling(${n})">削除</button>
+    </div>
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="field">
+        <label>お名前（漢字）</label>
+        <input type="text" id="sib_name_${n}" placeholder="例：福島 次郎">
+      </div>
+      <div class="field">
+        <label>お名前（ふりがな）</label>
+        <input type="text" id="sib_kana_${n}" placeholder="例：ふくしま じろう">
+      </div>
+    </div>
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="field">
+        <label>学年</label>
+        <select id="sib_grade_${n}">
+          <option value="">選択してください</option>
+          <optgroup label="小学生">
+            <option>小学１年生</option><option>小学２年生</option><option>小学３年生</option>
+            <option>小学４年生</option><option>小学５年生</option><option>小学６年生</option>
+          </optgroup>
+          <optgroup label="中学生">
+            <option>中学１年生</option><option>中学２年生</option><option>中学３年生</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>性別</label>
+        <select id="sib_gender_${n}">
+          <option value="">選択してください</option>
+          <option>男子</option><option>女子</option>
+        </select>
+      </div>
+    </div>
+    <span class="sibling-section-label">希望コース</span>
+    <div class="sibling-course-grid">${courseOptions}</div>
+    <span class="sibling-section-label" style="margin-top:14px;">登録・保険区分</span>
+    <div class="sibling-reg-grid">${regOptions}</div>
+  `;
+  list.appendChild(block);
+  block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function removeSibling(n) {
+  const block = document.getElementById(`sibling_${n}`);
+  if (block) block.remove();
+}
+
+</script>
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbySxo09RkMBAVhgNkooAwC0FhYDNRPmi73lq4AY5xWBrO3IVUkUsLm5mLNBVm6Qt5kjWQ/exec';
+
+async function handleSubmit() {
+  let valid = true;
+  const checks = [
+    ['childName','childNameErr'],
+    ['childNameKana','childNameKanaErr'],
+    ['parentName','parentNameErr'],
+    ['phone','phoneErr'],
+    ['email','emailErr'],
+  ];
+  checks.forEach(([id, errId]) => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if (!el.value.trim()) {
+      el.classList.add('error'); err.classList.add('show'); valid = false;
+    } else {
+      el.classList.remove('error'); err.classList.remove('show');
+    }
+  });
+
+  const grade = document.getElementById('grade');
+  const gradeErr = document.getElementById('gradeErr');
+  if (!grade.value) { grade.classList.add('error'); gradeErr.classList.add('show'); valid = false; }
+  else { grade.classList.remove('error'); gradeErr.classList.remove('show'); }
+
+  const course = document.querySelector('input[name="course"]:checked');
+  const courseErr = document.getElementById('courseErr');
+  if (!course) { courseErr.classList.add('show'); valid = false; }
+  else { courseErr.classList.remove('show'); }
+
+  const regType = document.querySelector('input[name="regType"]:checked');
+  const regErr = document.getElementById('regErr');
+  if (!regType) { regErr.classList.add('show'); valid = false; }
+  else { regErr.classList.remove('show'); }
+
+  if (!valid) {
+    document.querySelector('.error, .err-msg.show')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  // 兄弟情報をまとめる
+  const siblingBlocks = document.querySelectorAll('.sibling-block');
+  const siblingsData = [];
+  siblingBlocks.forEach((block, i) => {
+    const n = block.id.replace('sibling_', '');
+    const name = document.getElementById('sib_name_' + n)?.value || '';
+    const kana = document.getElementById('sib_kana_' + n)?.value || '';
+    const g = document.getElementById('sib_grade_' + n)?.value || '';
+    const gender = document.getElementById('sib_gender_' + n)?.value || '';
+    const c = block.querySelector('input[name="sib_course_' + n + '"]:checked')?.value || '';
+    const r = block.querySelector('input[name="sib_reg_' + n + '"]:checked')?.value || '';
+    if (name) siblingsData.push((i+1) + '人目：' + name + '（' + kana + '）' + g + ' ' + gender + ' / ' + c + ' / ' + r);
+  });
+
+  const payload = {
+    childName:      document.getElementById('childName').value,
+    childNameKana:  document.getElementById('childNameKana').value,
+    school:         document.getElementById('school').value,
+    grade:          grade.value,
+    gender:         document.getElementById('gender').value,
+    experience:     document.getElementById('experience').value,
+    course:         course.value,
+    regType:        regType.value,
+    parentName:     document.getElementById('parentName').value,
+    relation:       document.getElementById('relation').value,
+    address:        document.getElementById('address').value,
+    phone:          document.getElementById('phone').value,
+    email:          document.getElementById('email').value,
+    emergencyPhone: document.getElementById('emergencyPhone').value,
+    siblings:       siblingsData.join(' | '),
+    remarks:        document.getElementById('remarks').value,
+  };
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '送信中...';
+  btn.disabled = true;
+
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    document.getElementById('joinForm').style.display = 'none';
+    document.getElementById('successEmail').textContent = payload.email;
+    document.getElementById('successMsg').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    btn.textContent = '申込を送信する';
+    btn.disabled = false;
+    alert('送信に失敗しました。通信環境を確認の上、再度お試しください。');
+  }
+}
+
+['childName','childNameKana','parentName','phone'].forEach(id => {
+  document.getElementById(id).addEventListener('blur', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      const err = document.getElementById(id + 'Err');
+      if (err) err.classList.remove('show');
+    }
+  });
+});
+// 料金マスター
+const COURSE_FEES = {
+  '小学生6回体験コース':   { label: '受講料（小学生6回体験）', annual: 3000,  monthly: 0 },
+  '小学生レジャーコース':  { label: '受講料（小学生レジャー）', annual: 6000,  monthly: 0 },
+  '小学生選手強化コース':  { label: '受講料（小学生選手強化）', annual: 9000,  monthly: 0 },
+  '中学生選手強化コース':  { label: '受講料（中学生選手強化）', annual: 0,     monthly: 1000 },
+};
+const REG_FEES = {
+  '小学生：会員（年2,800円）':         { label: '登録・保険（小学生：会員）',      annual: 2800 },
+  '小学生：賛助会員B（年3,800円）':    { label: '登録・保険（小学生：賛助会員B）', annual: 3800 },
+  '中学生：賛助会員B（年4,300円）':    { label: '登録・保険（中学生：賛助会員B）', annual: 4300 },
+  '中学生：賛助会員A（年7,300円）':    { label: '登録・保険（中学生：賛助会員A）', annual: 7300 },
+};
+
+function calcTotal() {
+  const course = document.querySelector('input[name="course"]:checked');
+  const reg    = document.querySelector('input[name="regType"]:checked');
+  const box    = document.getElementById('totalBox');
+
+  if (!course || !reg) { box.classList.remove('show'); return; }
+
+  const cf = COURSE_FEES[course.value];
+  const rf = REG_FEES[reg.value];
+  if (!cf || !rf) { box.classList.remove('show'); return; }
+
+  const rows = document.getElementById('totalRows');
+  const amountEl = document.getElementById('totalAmount');
+  const noteEl = document.getElementById('totalNote');
+
+  rows.innerHTML = '';
+
+  // 受講料
+  let courseText, courseAnnual;
+  if (cf.monthly > 0) {
+    courseText  = cf.label + '　月 ' + cf.monthly.toLocaleString() + '円';
+    courseAnnual = cf.monthly * 12;
+  } else {
+    courseText  = cf.label + '　年 ' + cf.annual.toLocaleString() + '円';
+    courseAnnual = cf.annual;
+  }
+  rows.innerHTML += '<div class="total-row"><span>' + courseText + '</span></div>';
+  rows.innerHTML += '<div class="total-row"><span>' + rf.label + '　年 ' + rf.annual.toLocaleString() + '円</span></div>';
+
+  // 兄弟分を集計
+  const siblingBlocks = document.querySelectorAll('.sibling-block');
+  let sibTotal = 0;
+  siblingBlocks.forEach(block => {
+    const n = block.id.replace('sibling_', '');
+    const sc = block.querySelector('input[name="sib_course_' + n + '"]:checked');
+    const sr = block.querySelector('input[name="sib_reg_' + n + '"]:checked');
+    const sname = document.getElementById('sib_name_' + n)?.value || ('兄弟' + n);
+    if (sc && sr) {
+      const scf = COURSE_FEES[sc.value];
+      const srf = REG_FEES[sr.value];
+      if (scf && srf) {
+        const sca = scf.monthly > 0 ? scf.monthly * 12 : scf.annual;
+        const st = sca + srf.annual;
+        sibTotal += st;
+        rows.innerHTML += '<div class="total-row"><span>' + sname + '（' + sc.value + ' ＋ ' + sr.value.split('：')[1].split('（')[0] + '）</span><span>' + st.toLocaleString() + '円</span></div>';
+      }
+    }
+  });
+
+  const total = courseAnnual + rf.annual + sibTotal;
+  amountEl.textContent = total.toLocaleString() + '円';
+
+  let note = "\uff0a振込時はご依頼人の前に\u300cAJ\u300dを入れて、お子さまのお名前でお振込みください。";
+  if (cf.monthly > 0) note += "\n\uff0a中学生選手強化コースの受講料は月払いですが、登録・保険料は年払いです。";
+  noteEl.textContent = note;
+
+  box.classList.add('show');
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// コース・登録区分の変更時に合計を再計算
+document.addEventListener('change', function(e) {
+  if (e.target.name === 'course' || e.target.name === 'regType' ||
+      (e.target.name && (e.target.name.startsWith('sib_course_') || e.target.name.startsWith('sib_reg_')))) {
+    calcTotal();
+  }
+});
+
+</script>
+</body>
+</html>
