@@ -293,7 +293,7 @@
     <div class="header-sub">Abukuma Junior Canoe Club — Membership Application</div>
   </div>
 
-  <form id="joinForm" novalidate>
+  <form action="https://script.google.com/macros/s/AKfycbyNJ9sjWXbbNFuQjFMc4ntH8vjC2vmwhApoJh2_r8jJO_Z9gH8kPs98U9xfmP6r7XZe/exec" method="post"onsubmit="handleSubmit();return false;>
 
     <!-- 1. お子様の情報 -->
     <div class="card">
@@ -305,19 +305,19 @@
       <div class="form-grid">
         <div class="field">
           <label>お子様のお名前（漢字）</label>
-          <input type="text" id="childName" placeholder="例：福島 太郎" required>
+          <input type="text" id="childName"name="childName"placeholder="例：福島 太郎" required>
           <span class="err-msg" id="childNameErr">お名前を入力してください</span>
         </div>
         <div class="field">
           <label>お名前（ふりがな）</label>
-          <input type="text" id="childNameKana" placeholder="例：ふくしま たろう" required>
+          <input type="text" id="childNameKana" neme"childNameKana"=placeholder="例：ふくしま たろう" required>
           <span class="err-msg" id="childNameKanaErr">ふりがなを入力してください</span>
         </div>
       </div>
       <div class="form-grid cols-3">
         <div class="field">
           <label>学校名</label>
-          <input type="text" id="school" placeholder="例：東和小学校">
+          <input type="text" id="school"name="school"=placeholder="例：東和小学校">
         </div>
         <div class="field">
           <label>学年</label>
