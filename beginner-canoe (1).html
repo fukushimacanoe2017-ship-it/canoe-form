@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>初心者カヌー教室 参加申込</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0c2340;
+    --blue: #1357a6;
+    --sky: #2196f3;
+    --water: #64b5f6;
+    --foam: #e8f4fd;
+    --accent: #e65100;
+    --gray: #546e7a;
+    --light: #f4f8fc;
+    --border: #cfd8dc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #0c2340;
+    min-height: 100vh;
+  }
+  .bg {
+    position: fixed; inset: 0;
+    background: linear-gradient(160deg, #0c2340 0%, #0d3060 60%, #0a1f38 100%);
+    z-index: 0; overflow: hidden;
+  }
+  .bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse at 15% 85%, rgba(33,150,243,.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(100,181,246,.12) 0%, transparent 45%);
+  }
+  .waves { position: absolute; bottom: 0; left: 0; right: 0; height: 160px; opacity: .08; }
+  .container { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+
+  .header { text-align: center; margin-bottom: 32px; animation: fadeDown .7s ease both; }
+  .org-name { font-size: 12px; color: rgba(255,255,255,.5); letter-spacing: .12em; margin-bottom: 10px; }
+  .header h1 { font-size: clamp(20px, 5vw, 30px); font-weight: 900; color: #fff; line-height: 1.4; margin-bottom: 6px; }
+  .header h1 em { font-style: normal; color: var(--water); }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,.4); letter-spacing: .06em; }
+  @keyframes fadeDown { from{ opacity:0; transform:translateY(-18px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* Event info */
+  .event-card {
+    background: linear-gradient(135deg, #0c2340 0%, #1357a6 100%);
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 28px rgba(19,87,166,.35);
+    animation: fadeUp .6s ease both;
+  }
+  .event-row { display: flex; gap: 14px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .event-row:last-child { border-bottom: none; }
+  .event-label { width: 84px; flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--water); letter-spacing: .04em; padding-top: 1px; }
+  .event-value { font-size: 13.5px; color: rgba(255,255,255,.92); line-height: 1.6; }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,.97);
+    border-radius: 18px; padding: 36px 36px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(100,181,246,.12);
+    animation: fadeUp .65s ease both;
+  }
+  .card:nth-of-type(1){ animation-delay:.08s; }
+  .card:nth-of-type(2){ animation-delay:.16s; }
+  .card:nth-of-type(3){ animation-delay:.24s; }
+  @media(max-width:520px){ .card{ padding:24px 18px 22px; } }
+
+  .card-header { display: flex; align-items: center; gap: 11px; margin-bottom: 26px; padding-bottom: 14px; border-bottom: 2px solid var(--foam); }
+  .step-num { width:30px; height:30px; background:var(--navy); color:#fff; border-radius:50%; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .card-header h2 { font-size:15px; font-weight:700; color:var(--navy); flex:1; }
+  .req-badge { font-size:10px; font-weight:700; background:var(--accent); color:#fff; padding:3px 8px; border-radius:5px; letter-spacing:.04em; flex-shrink:0; }
+  .opt-badge { font-size:10px; font-weight:700; background:var(--gray); color:#fff; padding:3px 8px; border-radius:5px; letter-spacing:.04em; flex-shrink:0; }
+
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .form-grid.cols-1 { grid-template-columns:1fr; }
+  @media(max-width:520px){ .form-grid { grid-template-columns:1fr; } }
+  .field { display:flex; flex-direction:column; }
+  label { font-size:11.5px; font-weight:700; color:#37474f; margin-bottom:6px; letter-spacing:.03em; }
+  input[type=text], input[type=email], input[type=tel], select, textarea {
+    font-family:'Noto Sans JP',sans-serif; font-size:14px; color:var(--navy);
+    background:var(--light); border:2px solid var(--border); border-radius:9px;
+    padding:11px 13px; transition:border .2s,box-shadow .2s,background .2s; outline:none; width:100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color:var(--sky); background:#fff; box-shadow:0 0 0 4px rgba(33,150,243,.11); }
+  input.error, select.error { border-color:#e53935; background:#fff5f5; }
+  input::placeholder, textarea::placeholder { color:#b0bec5; font-size:12.5px; }
+  select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%23546e7a' d='M5 7 0 0h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 13px center; padding-right:34px; cursor:pointer; }
+  textarea { resize:vertical; min-height:76px; }
+  .hint { font-size:11px; color:#90a4ae; margin-top:4px; }
+  .err-msg { font-size:11px; color:#e53935; margin-top:4px; display:none; }
+  .err-msg.show { display:block; }
+
+  .notice { background:var(--foam); border-left:4px solid var(--sky); border-radius:0 10px 10px 0; padding:13px 16px; font-size:12px; color:#37474f; line-height:1.85; margin-top:18px; }
+  .notice strong { color:var(--blue); }
+
+  .submit-wrap { text-align:center; margin-top:12px; animation:fadeUp .65s .4s ease both; }
+  .submit-btn { font-family:'Noto Sans JP',sans-serif; font-size:16px; font-weight:700; color:#fff; background:linear-gradient(135deg,#1357a6 0%,#2196f3 100%); border:none; border-radius:50px; padding:17px 64px; cursor:pointer; box-shadow:0 8px 28px rgba(19,87,166,.45); transition:transform .2s,box-shadow .2s; letter-spacing:.06em; position:relative; overflow:hidden; }
+  .submit-btn:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(19,87,166,.55); }
+  .submit-btn:active { transform:translateY(0); }
+  .submit-btn:disabled { opacity:.7; cursor:default; transform:none; }
+  .submit-note { margin-top:14px; font-size:11.5px; color:rgba(255,255,255,.42); line-height:1.9; }
+
+  #successMsg { display:none; text-align:center; padding:20px; animation:fadeUp .5s ease; }
+  #successMsg.show { display:block; }
+  #successMsg h2 { font-size:22px; font-weight:900; color:#fff; margin-bottom:10px; }
+  #successMsg p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.9; }
+  #successMsg span.em { color:#64b5f6; font-weight:700; }
+
+  .footer-info { text-align:center; color:rgba(255,255,255,.35); font-size:11.5px; margin-top:36px; line-height:2; }
+</style>
+</head>
+<body>
+<div class="bg">
+  <svg class="waves" viewBox="0 0 1440 160" preserveAspectRatio="none">
+    <path fill="white" d="M0,80 C360,140 720,20 1080,80 C1260,110 1380,60 1440,80 L1440,160 L0,160Z"/>
+    <path fill="white" opacity=".5" d="M0,110 C300,60 600,150 900,100 C1100,65 1300,130 1440,100 L1440,160 L0,160Z"/>
+  </svg>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="org-name">福島県カヌー協会　主催</div>
+    <h1>初心者<em>カヌー教室</em><br>参加申込</h1>
+    <div class="header-sub">Beginner Canoe Class — Application</div>
+  </div>
+
+  <div class="event-card">
+    <div class="event-row">
+      <div class="event-label">開催日</div>
+      <div class="event-value">令和８年８月８日（土）</div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">対象</div>
+      <div class="event-value">中学３年生</div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">主催</div>
+      <div class="event-value">福島県カヌー協会</div>
+    </div>
+  </div>
+
+  <form id="joinForm" novalidate>
+
+    <!-- 1. 参加者情報 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">1</div>
+        <h2>参加者情報</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>参加者氏名（漢字）</label>
+          <input type="text" id="name" placeholder="例：福島 太郎" required>
+          <span class="err-msg" id="nameErr">お名前を入力してください</span>
+        </div>
+        <div class="field">
+          <label>お名前（ふりがな）</label>
+          <input type="text" id="nameKana" placeholder="例：ふくしま たろう" required>
+          <span class="err-msg" id="nameKanaErr">ふりがなを入力してください</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>学校名</label>
+          <input type="text" id="school" placeholder="例：福島県立○○高等学校" required>
+          <span class="err-msg" id="schoolErr">学校名を入力してください</span>
+        </div>
+        <div class="field">
+          <label>学年</label>
+          <select id="grade" required>
+            <option value="">選択してください</option>
+            <option>中学３年生</option>
+          </select>
+          <span class="err-msg" id="gradeErr">学年を選択してください</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 連絡先 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">2</div>
+        <h2>連絡先</h2>
+        <span class="req-badge">必須</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>メールアドレス</label>
+          <input type="email" id="email" placeholder="例：example@mail.com" required>
+          <span class="err-msg" id="emailErr">メールアドレスを入力してください</span>
+        </div>
+        <div class="field">
+          <label>電話番号</label>
+          <input type="tel" id="phone" placeholder="例：090-0000-0000" required>
+          <span class="err-msg" id="phoneErr">電話番号を入力してください</span>
+        </div>
+      </div>
+      <div class="notice">
+        ＊未成年の方は、保護者の方の同意のもとお申し込みください。<br>
+        ＊集合場所・持ち物などの詳細は、ご記入いただいたメールアドレスへ別途ご連絡します。
+      </div>
+    </div>
+
+    <!-- 3. その他 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">3</div>
+        <h2>ご質問・連絡事項</h2>
+        <span class="opt-badge">任意</span>
+      </div>
+      <div class="form-grid cols-1">
+        <div class="field">
+          <textarea id="remarks" placeholder="自由にご記入ください"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="button" class="submit-btn" onclick="handleSubmit()">申込を送信する</button>
+      <div class="submit-note">お問い合わせ：福島県カヌー協会</div>
+    </div>
+  </form>
+
+  <div id="successMsg">
+    <div style="font-size:48px;color:#64b5f6;">✓</div>
+    <h2>申込を受け付けました！</h2>
+    <p>
+      お申込みいただきありがとうございます。<br>
+      <span class="em" id="successEmail"></span> に確認のご連絡をお送りします。<br><br>
+      開催日：令和８年８月８日（土）<br>
+      集合場所・持ち物などの詳細は、後日メールでご案内します。
+    </p>
+  </div>
+
+  <div class="footer-info">
+    福島県カヌー協会　初心者カヌー教室
+  </div>
+</div>
+
+<script>
+function handleSubmit() {
+  let valid = true;
+  const checks = [
+    ['name','nameErr'],
+    ['nameKana','nameKanaErr'],
+    ['school','schoolErr'],
+    ['email','emailErr'],
+    ['phone','phoneErr'],
+  ];
+  checks.forEach(([id, errId]) => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if (!el.value.trim()) {
+      el.classList.add('error'); err.classList.add('show'); valid = false;
+    } else {
+      el.classList.remove('error'); err.classList.remove('show');
+    }
+  });
+
+  const grade = document.getElementById('grade');
+  const gradeErr = document.getElementById('gradeErr');
+  if (!grade.value) { grade.classList.add('error'); gradeErr.classList.add('show'); valid = false; }
+  else { grade.classList.remove('error'); gradeErr.classList.remove('show'); }
+
+  if (!valid) {
+    document.querySelector('.error, .err-msg.show')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  const payload = {
+    name:     document.getElementById('name').value,
+    nameKana: document.getElementById('nameKana').value,
+    school:   document.getElementById('school').value,
+    grade:    grade.value,
+    email:    document.getElementById('email').value,
+    phone:    document.getElementById('phone').value,
+    remarks:  document.getElementById('remarks').value,
+  };
+
+  // ▼送信先（Google Apps Script の Web App URLなどに置き換えてください）
+  // 例: const ENDPOINT_URL = 'https://script.google.com/macros/s/xxxxx/exec';
+  const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbzs7I6dpdyIx-NBnbt8TfT9FJ-f1M0tSmzZDDmMZBoJ7dLarHYKrnRXOXwAxqmil8s4/exec';
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '送信中...';
+  btn.disabled = true;
+
+  const showSuccess = () => {
+    document.getElementById('joinForm').style.display = 'none';
+    document.getElementById('successEmail').textContent = payload.email;
+    document.getElementById('successMsg').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (ENDPOINT_URL) {
+    fetch(ENDPOINT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).then(showSuccess).catch(() => {
+      btn.textContent = '申込を送信する';
+      btn.disabled = false;
+      alert('送信に失敗しました。通信環境を確認の上、再度お試しください。');
+    });
+  } else {
+    // 送信先が未設定の場合のプレビュー動作
+    console.log('申込データ:', payload);
+    showSuccess();
+  }
+}
+
+['name','nameKana','school','email','phone'].forEach(id => {
+  document.getElementById(id).addEventListener('blur', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      const err = document.getElementById(id + 'Err');
+      if (err) err.classList.remove('show');
+    }
+  });
+});
+</script>
+</body>
+</html>
