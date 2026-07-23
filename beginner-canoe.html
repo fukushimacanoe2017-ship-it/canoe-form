@@ -139,7 +139,7 @@
     </div>
     <div class="event-row">
       <div class="event-label">対象</div>
-      <div class="event-value">中学３年生 </div>
+      <div class="event-value">中学３年生</div>
     </div>
     <div class="event-row">
       <div class="event-label">主催</div>
@@ -171,9 +171,18 @@
       <div class="form-grid">
         <div class="field">
           <label>学校名</label>
-          <input type="text" id="school" placeholder="例：○○中学校" required>
+          <input type="text" id="school" placeholder="例：福島県立○○高等学校" required>
           <span class="err-msg" id="schoolErr">学校名を入力してください</span>
-        </div＞
+        </div>
+        <div class="field">
+          <label>学年</label>
+          <select id="grade" required>
+            <option value="">選択してください</option>
+            <option>中学３年生</option>
+          </select>
+          <span class="err-msg" id="gradeErr">学年を選択してください</span>
+        </div>
+      </div>
     </div>
 
     <!-- 2. 連絡先 -->
